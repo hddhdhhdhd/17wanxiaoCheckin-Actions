@@ -1,6 +1,6 @@
 # 🌈17wanxiaoCheckin-Actions
 
-  
+ 112 
 
 **🦄2020.12.2：更新校内打卡，（健康打卡，校内打卡）我全都要！**
 
@@ -139,6 +139,6 @@ def get_post_json(self, token):
    
 
    ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_check.png)
-1111
+
 
 
