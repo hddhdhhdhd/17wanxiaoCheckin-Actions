@@ -136,38 +136,36 @@ def check_in(username, password):
         return False
 
     # 健康打卡
-    if  True==ape_list[0]:
-        healthy_check_dict = healthy_check_in(username, token, post_dict)
-        check_dict_list.append(healthy_check_dict)
+    healthy_check_dict = healthy_check_in(username, token, post_dict)
+    check_dict_list.append(healthy_check_dict)
 
-    # 获取校内打卡ID=
-    id_list = get_id_list(token)
+    # 获取校内打卡ID
+    id_list = get_id_list_v1(token)
     # print(id_list)
     if not id_list:
         return check_dict_list
 
     # 校内打卡
-    if True==ape_list[1] or True==ape_list[2]:
-        for index, i in enumerate(id_list):
-                if ape_list[index]:
-                    # print(i)
-                    logging.info(f"-------------------------------{i['templateid']}-------------------------------")
-                    json2 = {"businessType": "epmpics",
-                             "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
-                                          "stuNo": post_dict['stuNo'],
-                                          "token": token}, "method": "userComeAppSchool",
-                             "token": token}
-                    campus_dict = get_post_json(token, json2)
-                    campus_dict['areaStr'] = post_dict['areaStr']
-                    for j in campus_dict['updatainfo']:
-                        if j['propertyname'] == 'temperature':
-                            j['value'] = '36.4'
-                        if j['propertyname'] == 'symptom':
-                            j['value'] = '无症状'
-                    campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
-                    check_dict_list.append(campus_check_dict)
-                    logging.info("--------------------------------------------------------------")
-            return check_dict_list
+    for index, i in enumerate(id_list):
+        if ape_list[index]:
+            # print(i)
+            logging.info(f"-------------------------------{i['templateid']}-------------------------------")
+            json2 = {"businessType": "epmpics",
+                     "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": 358,
+                                  "stuNo": post_dict['stuNo'],
+                                  "token": token}, "method": "userComeAppSchool",
+                     "token": token}
+            campus_dict = get_post_json(token, json2)
+            campus_dict['areaStr'] = post_dict['areaStr']
+            for j in campus_dict['updatainfo']:
+                if j['propertyname'] == 'temperature':
+                    j['value'] = '36.4'
+                if j['propertyname'] == 'symptom':
+                    j['value'] = '无症状'
+            campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
+            check_dict_list.append(campus_check_dict)
+            logging.info("--------------------------------------------------------------")
+    return check_dict_list
 
 
 def server_push(sckey, desp):
@@ -201,6 +199,22 @@ def get_id_list(token):
         return res.json()['customerAppTypeDto']['ruleList']
     except:
         return None
+
+
+def get_id_list_v1(token):
+    post_data = {
+        "appClassify": "DK",
+        "token": token
+    }
+    try:
+        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/childApps", data=post_data)
+        if res.json()['appList']:
+            id_list = sorted(res.json()['appList'][-1]['customerAppTypeRuleList'], key=lambda x: x['id'])
+            res_dict = [{'id': j['id'], "templateid": f"clockSign{i + 1}"} for i, j in enumerate(id_list)]
+            return res_dict
+        return False
+    except BaseException:
+        return False
 
 
 def get_ap():
@@ -239,7 +253,6 @@ def run():
 ```
 {json.dumps(check['check_json'], sort_keys=True, indent=4, ensure_ascii=False)}
 ```
-
 ------
 | Text                           | Message |
 | :----------------------------------- | :--- |
@@ -252,7 +265,6 @@ def run():
 ```
 {date}天
 ```
-
 >
 > [GitHub项目地址](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
 >
