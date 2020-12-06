@@ -147,7 +147,7 @@ def check_in(username, password):
         return check_dict_list
 
     # 校内打卡
-    if True==ape_list[1] and True==ape_list[2]:
+    if True==ape_list[1] or True==ape_list[2]:
         for index, i in enumerate(id_list):
                 if ape_list[index]:
                     # print(i)
