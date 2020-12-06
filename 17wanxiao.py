@@ -136,36 +136,38 @@ def check_in(username, password):
         return False
 
     # 健康打卡
-    healthy_check_dict = healthy_check_in(username, token, post_dict)
-    check_dict_list.append(healthy_check_dict)
+    if  True==ape_list[0]:
+        healthy_check_dict = healthy_check_in(username, token, post_dict)
+        check_dict_list.append(healthy_check_dict)
 
-    # 获取校内打卡ID
+    # 获取校内打卡ID=
     id_list = get_id_list(token)
     # print(id_list)
     if not id_list:
         return check_dict_list
 
     # 校内打卡
+    if True==ape_list[1] and True==ape_list[2]:
     for index, i in enumerate(id_list):
-        if ape_list[index]:
-            # print(i)
-            logging.info(f"-------------------------------{i['templateid']}-------------------------------")
-            json2 = {"businessType": "epmpics",
-                     "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
-                                  "stuNo": post_dict['stuNo'],
-                                  "token": token}, "method": "userComeAppSchool",
-                     "token": token}
-            campus_dict = get_post_json(token, json2)
-            campus_dict['areaStr'] = post_dict['areaStr']
-            for j in campus_dict['updatainfo']:
-                if j['propertyname'] == 'temperature':
-                    j['value'] = '36.4'
-                if j['propertyname'] == 'symptom':
-                    j['value'] = '无症状'
-            campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
-            check_dict_list.append(campus_check_dict)
-            logging.info("--------------------------------------------------------------")
-    return check_dict_list
+            if ape_list[index]:
+                # print(i)
+                logging.info(f"-------------------------------{i['templateid']}-------------------------------")
+                json2 = {"businessType": "epmpics",
+                         "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
+                                      "stuNo": post_dict['stuNo'],
+                                      "token": token}, "method": "userComeAppSchool",
+                         "token": token}
+                campus_dict = get_post_json(token, json2)
+                campus_dict['areaStr'] = post_dict['areaStr']
+                for j in campus_dict['updatainfo']:
+                    if j['propertyname'] == 'temperature':
+                        j['value'] = '36.4'
+                    if j['propertyname'] == 'symptom':
+                        j['value'] = '无症状'
+                campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
+                check_dict_list.append(campus_check_dict)
+                logging.info("--------------------------------------------------------------")
+        return check_dict_list
 
 
 def server_push(sckey, desp):
