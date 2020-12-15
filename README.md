@@ -53,7 +53,7 @@ def get_post_json(self, token):
         "areaStr": data['areaStr'],
         "deptStr": data['deptStr'],
         "deptid": data['deptStr']['deptid'],
-        "customerid": data['customerid'],
+        "customerid": data['customerid'], 
         "userid": data['userid'],
         "username": data['username'],
         "stuNo": data['stuNo'],
